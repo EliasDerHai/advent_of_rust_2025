@@ -1,8 +1,7 @@
-#![allow(unused_variables, dead_code)]
 pub fn solve_day_01_part_01(input: &str) -> i32 {
     let mut v = 50;
     let mut c = 0;
-    for el in parse(input) {
+    for el in parse_day_01(input) {
         v = (v + el) % 100;
         if v == 0 {
             c += 1;
@@ -11,7 +10,7 @@ pub fn solve_day_01_part_01(input: &str) -> i32 {
     c
 }
 
-fn parse(input: &str) -> Vec<i32> {
+pub fn parse_day_01(input: &str) -> Vec<i32> {
     input
         .trim()
         .lines()
