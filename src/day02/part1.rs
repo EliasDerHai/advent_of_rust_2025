@@ -8,14 +8,12 @@ pub fn solve_day_02_part_01(input: &str) -> u64 {
     let mut result = 0u64;
     for (lower, upper) in parse_day02(input) {
         let (mut half, mut full) = split_dupe(&lower);
-        // println!("\n{lower}<->{upper}: (first full={full})");
         let lower = lower.parse().unwrap();
 
         while full <= upper {
             if full >= lower {
                 result += full;
             }
-            // println!("adding {full} -> {result}");
             half += 1;
             full = format!("{half}{half}")
                 .parse::<u64>()
