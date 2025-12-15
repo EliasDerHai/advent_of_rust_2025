@@ -63,7 +63,7 @@ mod tests {
 
         let solution = solve_day_02_part_01(&input);
 
-        println!("{solution}");
+        assert_eq!(64215794229, solution)
     }
 
     #[test]

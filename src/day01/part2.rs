@@ -35,7 +35,7 @@ mod tests {
 
         let solution = solve_day_01_part_02(&input);
 
-        println!("{solution}");
+        assert_eq!(6858, solution)
     }
 
     #[test]
