@@ -1,4 +1,3 @@
-#![allow(unused_variables, dead_code)]
 pub fn solve_day_03_part_01(input: &str) -> u32 {
     input.lines().map(jolts).sum()
 }
@@ -11,14 +10,14 @@ pub fn jolts(l: &str) -> u32 {
         .enumerate()
         .collect();
 
-    for jolt in jolts[..jolts.len() - 1].iter() {
+    for jolt in &jolts[..jolts.len() - 1] {
         if jolt.1 > max_left.1 {
             max_left = *jolt;
         }
     }
 
     let mut max_right: (usize, u32) = (0, 0);
-    for jolt in jolts[max_left.0 + 1..].iter() {
+    for jolt in &jolts[max_left.0 + 1..] {
         if jolt.1 > max_right.1 {
             max_right = *jolt;
         }
@@ -40,7 +39,7 @@ mod tests {
 
         let solution = solve_day_03_part_01(&input);
 
-        println!("{solution}");
+        assert_eq!(17281, solution)
     }
 
     #[test]
