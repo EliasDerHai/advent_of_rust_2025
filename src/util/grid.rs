@@ -90,6 +90,10 @@ impl<T> Grid<T> {
 
         Grid { map: next }
     }
+
+    pub fn remove(&mut self, p: &Point) -> Option<T> {
+        self.map.remove(p)
+    }
 }
 
 #[cfg(test)]
