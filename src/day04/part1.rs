@@ -1,21 +1,13 @@
-#![allow(unused_variables, dead_code)]
+use crate::util::grid::Grid;
 
-#[derive(Debug, PartialEq, Eq)]
-enum Field {
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Field {
     PaperRoll,
     Empty,
 }
 
-use crate::util::grid::Grid;
 pub fn solve_day_04_part_01(input: &str) -> u32 {
-    let grid = Grid::from(input).map(|c| {
-        if c == '@' {
-            Field::PaperRoll
-        } else {
-            Field::Empty
-        }
-    });
-
+    let grid = parse_day_04(input);
     grid.iter()
         .filter(|&(p, f)| {
             f == &Field::PaperRoll
@@ -26,6 +18,16 @@ pub fn solve_day_04_part_01(input: &str) -> u32 {
                     < 4
         })
         .count() as u32
+}
+
+pub fn parse_day_04(input: &str) -> Grid<Field> {
+    Grid::from(input).map(|c| {
+        if c == '@' {
+            Field::PaperRoll
+        } else {
+            Field::Empty
+        }
+    })
 }
 
 #[cfg(test)]
