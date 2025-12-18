@@ -41,6 +41,19 @@ where
     pub fn neighbors(&self) -> [Point<T>; 4] {
         [self.up(), self.right(), self.down(), self.left()]
     }
+
+    pub fn neighbors_with_diagnonals(&self) -> [Point<T>; 8] {
+        [
+            self.up(),
+            self.up().right(),
+            self.right(),
+            self.down().right(),
+            self.down(),
+            self.down().left(),
+            self.left(),
+            self.up().left(),
+        ]
+    }
 }
 
 impl Point<i32> {
