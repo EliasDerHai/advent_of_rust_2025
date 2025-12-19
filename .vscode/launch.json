@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "codelldb",
+      "request": "launch",
+      "name": "Debug all tests",
+      "program": "${workspaceFolder}/target/debug/deps/advent_of_rust_2025-da37a6dddf88d909",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "stopOnEntry": false
+    },
+    {
+      "type": "codelldb",
+      "request": "launch",
+      "name": "Debug day 05 part 1 sample test",
+      "program": "${workspaceFolder}/target/debug/deps/advent_of_rust_2025-da37a6dddf88d909",
+      "args": ["day05::part1::tests::should_solve_day_05_part_01_sample", "--exact", "--nocapture"],
+      "cwd": "${workspaceFolder}",
+      "stopOnEntry": false
+    },
+    {
+      "type": "codelldb",
+      "request": "launch",
+      "name": "Debug current test (manual)",
+      "program": "${workspaceFolder}/target/debug/deps/advent_of_rust_2025-da37a6dddf88d909",
+      "args": ["${command:pickString}"],
+      "cwd": "${workspaceFolder}",
+      "stopOnEntry": false
+    }
+  ]
+}
