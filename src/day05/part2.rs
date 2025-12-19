@@ -1,6 +1,14 @@
-#![allow(unused_variables, dead_code)]
-pub fn solve_day_05_part_02(input: &str) -> u32 {
-    todo!()
+use crate::day05::part1::parse_day05;
+
+pub fn solve_day_05_part_02(input: &str) -> u64 {
+    let (ranges, _) = parse_day05(input);
+    let mut result = 0;
+
+    for (min, max) in ranges {
+        result = result + max - (min - 1);
+    }
+
+    result
 }
 
 #[cfg(test)]
@@ -15,7 +23,7 @@ mod tests {
 
         let solution = solve_day_05_part_02(&input);
 
-        println!("{solution}");
+        assert_eq!(353863745078671, solution);
     }
 
     #[test]
@@ -35,6 +43,6 @@ mod tests {
         "}
         .trim();
 
-        assert_eq!(3, solve_day_05_part_02(input));
+        assert_eq!(14, solve_day_05_part_02(input));
     }
 }

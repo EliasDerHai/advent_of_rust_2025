@@ -1,7 +1,7 @@
 use itertools::Itertools;
 
 pub fn solve_day_05_part_01(input: &str) -> u64 {
-    let (ranges, ingredients) = parse(input);
+    let (ranges, ingredients) = parse_day05(input);
     let mut result = 0;
 
     for ing in ingredients {
@@ -13,7 +13,7 @@ pub fn solve_day_05_part_01(input: &str) -> u64 {
     result
 }
 
-fn parse(input: &str) -> (Vec<(u64, u64)>, Vec<u64>) {
+pub fn parse_day05(input: &str) -> (Vec<(u64, u64)>, Vec<u64>) {
     let (ranges, ingredients) = input.split_once("\n\n").expect("formatting");
 
     let ranges = ranges
