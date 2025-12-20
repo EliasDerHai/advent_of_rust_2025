@@ -1,7 +1,7 @@
 use std::{iter::Rev, str::Lines};
 
 #[derive(Debug, PartialEq, Eq)]
-enum Op {
+pub enum Op {
     Add,
     Mult,
 }

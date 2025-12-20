@@ -60,6 +60,7 @@ pub fn solve_${FOLDER_SNAKE}_part_02(input: &str) -> u32 {
 mod tests {
     use crate::util::file::read_string;
     use super::*;
+    use indoc::indoc;
 
     #[test]
     fn should_solve_${FOLDER_SNAKE}_part_02() {
@@ -67,13 +68,17 @@ mod tests {
 
         let solution = solve_${FOLDER_SNAKE}_part_02(&input);
 
+	// assert_eq!(0, solution);
         println!("{solution}");
     }
 
 
     #[test]
     fn should_solve_${FOLDER_SNAKE}_part_02_sample() {
-        let input = "".trim();
+        let input = indoc! {"
+
+        "}
+        .trim();
 
         assert_eq!(0, solve_${FOLDER_SNAKE}_part_02(input));
     }
