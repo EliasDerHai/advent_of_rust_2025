@@ -2,14 +2,14 @@ use itertools::Itertools;
 use std::collections::HashSet;
 
 #[derive(Debug)]
-struct P3 {
-    x: u32,
-    y: u32,
-    z: u32,
+pub struct P3 {
+    pub x: u32,
+    pub y: u32,
+    pub z: u32,
 }
 
 impl P3 {
-    fn new(x: u32, y: u32, z: u32) -> Self {
+    pub fn new(x: u32, y: u32, z: u32) -> Self {
         Self { x, y, z }
     }
 }
