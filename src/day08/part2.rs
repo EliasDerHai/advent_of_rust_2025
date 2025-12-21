@@ -1,9 +1,7 @@
-use crate::day08::part1::P3;
-use itertools::Itertools;
-use std::collections::HashSet;
+use crate::{day08::part1::P3, util::find_union::FindUnion};
+use std::cmp::Reverse;
+use std::collections::BinaryHeap;
 
-// TODO: optimize using union-find
-// https://www.geeksforgeeks.org/dsa/introduction-to-disjoint-set-data-structure-or-union-find-algorithm/
 pub fn solve_day_08_part_02(input: &str) -> u32 {
     let points: Vec<(usize, P3)> = input
         .lines()
@@ -17,8 +15,8 @@ pub fn solve_day_08_part_02(input: &str) -> u32 {
         })
         .collect();
 
-    let mut dists: Vec<((usize, usize), u64)> = Vec::new();
-    let mut circs: Vec<HashSet<usize>> = Vec::new();
+    let mut heap = BinaryHeap::new();
+    let mut fu = FindUnion::new(points.len());
 
     for (idx_a, p_a) in &points {
         for (idx_b, p_b) in &points[*idx_a + 1..] {
@@ -26,45 +24,14 @@ pub fn solve_day_08_part_02(input: &str) -> u32 {
             let dy = p_a.y.abs_diff(p_b.y) as u64;
             let dz = p_a.z.abs_diff(p_b.z) as u64;
             let dist = dx * dx + dy * dy + dz * dz; // sqrt not needed for sorting
-            dists.push(((*idx_a, *idx_b), dist));
+            heap.push(Reverse((dist, *idx_a, *idx_b)));
         }
     }
 
-    for ((from, to), _) in dists.into_iter().sorted_by(|a, b| Ord::cmp(&a.1, &b.1)) {
-        let circ_from = circs.iter().position(|circ| circ.contains(&from));
-        let circ_to = circs.iter().position(|circ| circ.contains(&to));
+    while let Some(Reverse((_, from, to))) = heap.pop() {
+        fu.union(from, to);
 
-        match (circ_from, circ_to) {
-            (None, None) => {
-                circs.push({
-                    let mut h = HashSet::new();
-                    h.insert(from);
-                    h.insert(to);
-                    h
-                });
-            }
-            (None, Some(circ_to)) => {
-                circs[circ_to].insert(from);
-            }
-            (Some(circ_from), None) => {
-                circs[circ_from].insert(to);
-            }
-            (Some(circ_from), Some(circ_to)) if circ_from == circ_to => {
-                // nothing to do (already same circuit)
-            }
-            (Some(circ_from_idx), Some(circ_to_idx)) => {
-                // removing 'lower' idx shifts position of 'higher' lookup/insert
-                if circ_from_idx > circ_to_idx {
-                    let circ_from = circs.remove(circ_from_idx);
-                    circs[circ_to_idx].extend(circ_from);
-                } else {
-                    let circ_to = circs.remove(circ_to_idx);
-                    circs[circ_from_idx].extend(circ_to);
-                }
-            }
-        }
-
-        if circs.len() == 1 && circs.first().unwrap().len() == points.len() {
+        if *fu.sizes.iter().max().expect("not empty") == fu.sizes.len() as u32 {
             return points[from].1.x * points[to].1.x;
         }
     }

@@ -1,5 +1,6 @@
 use itertools::Itertools;
-use std::collections::HashSet;
+
+use crate::util::find_union::FindUnion;
 
 #[derive(Debug)]
 pub struct P3 {
@@ -28,7 +29,7 @@ pub fn solve_day_08_part_01(input: &str, connections: usize) -> u32 {
         .collect();
 
     let mut dists: Vec<((usize, usize), u64)> = Vec::new();
-    let mut circs: Vec<HashSet<usize>> = Vec::new();
+    let mut fu = FindUnion::new(points.len());
 
     for (idx_a, p_a) in &points {
         for (idx_b, p_b) in &points[*idx_a + 1..] {
@@ -40,48 +41,13 @@ pub fn solve_day_08_part_01(input: &str, connections: usize) -> u32 {
         }
     }
 
-    for &((from, to), _) in &dists
-        .into_iter()
-        .sorted_by(|a, b| Ord::cmp(&a.1, &b.1))
-        .collect::<Vec<_>>()[..connections]
-    {
-        let circ_from = circs.iter().position(|circ| circ.contains(&from));
-        let circ_to = circs.iter().position(|circ| circ.contains(&to));
+    dists.select_nth_unstable_by(connections - 1, |a, b| Ord::cmp(&a.1, &b.1));
 
-        match (circ_from, circ_to) {
-            (None, None) => {
-                circs.push({
-                    let mut h = HashSet::new();
-                    h.insert(from);
-                    h.insert(to);
-                    h
-                });
-            }
-            (None, Some(circ_to)) => {
-                circs[circ_to].insert(from);
-            }
-            (Some(circ_from), None) => {
-                circs[circ_from].insert(to);
-            }
-            (Some(circ_from), Some(circ_to)) if circ_from == circ_to => {
-                // nothing to do (already same circuit)
-            }
-            (Some(circ_from_idx), Some(circ_to_idx)) => {
-                // removing 'lower' idx shifts position of 'higher' lookup/insert
-                if circ_from_idx > circ_to_idx {
-                    let circ_from = circs.remove(circ_from_idx);
-                    circs[circ_to_idx].extend(circ_from);
-                } else {
-                    let circ_to = circs.remove(circ_to_idx);
-                    circs[circ_from_idx].extend(circ_to);
-                }
-            }
-        }
+    for ((from, to), _) in &dists[..connections] {
+        fu.union(*from, *to);
     }
 
-    circs.sort_by(|a, b| Ord::cmp(&a.len(), &b.len()));
-    let mut it = circs.iter().rev();
-    (it.next().unwrap().len() * it.next().unwrap().len() * it.next().unwrap().len()) as u32
+    fu.sizes.iter().sorted().rev().take(3).product::<u32>()
 }
 
 #[cfg(test)]
