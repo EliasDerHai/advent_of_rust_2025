@@ -25,7 +25,6 @@ impl From<&str> for Grid<char> {
         let map: HashMap<Point, char> = value
             .lines()
             .enumerate()
-            .into_iter()
             .flat_map(|(y, line)| {
                 line.chars().enumerate().map(move |(x, c)| {
                     let p = Point::new(x as i32, y as i32);
@@ -109,6 +108,6 @@ mod tests {
         .trim();
         let original: Grid<char> = Grid::from(chars);
         let numeric: Grid<u8> = original.map(|v| v.to_string().parse::<u8>().unwrap());
-        assert_eq!(36u8, numeric.map.iter().map(|(_, v)| v).sum::<u8>());
+        assert_eq!(36u8, numeric.map.values().sum::<u8>());
     }
 }

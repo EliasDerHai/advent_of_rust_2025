@@ -18,6 +18,15 @@ impl<T> Point<T> {
     }
 }
 
+impl From<(i32, i32)> for Point<i32> {
+    fn from(value: (i32, i32)) -> Self {
+        Point {
+            x: value.0,
+            y: value.1,
+        }
+    }
+}
+
 impl<T> Point<T>
 where
     T: Copy + Add<Output = T> + Sub<Output = T> + From<i32>,

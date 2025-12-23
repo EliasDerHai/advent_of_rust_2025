@@ -13,7 +13,7 @@ pub fn solve_day_09_part_01(input: &str) -> u64 {
     result
 }
 
-fn parse(input: &str) -> Vec<(u32, u32)> {
+pub fn parse(input: &str) -> Vec<(u32, u32)> {
     input
         .trim()
         .lines()
