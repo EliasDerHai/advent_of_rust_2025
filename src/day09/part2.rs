@@ -1,5 +1,7 @@
+use std::collections::{BTreeSet, HashMap, HashSet};
+
 pub fn solve_day_09_part_02(input: &str) -> u32 {
-    let vertices: Vec<(i32, i32)> = input
+    let vertices: Vec<(u32, u32)> = input
         .trim()
         .lines()
         .map(|l| {
@@ -9,25 +11,20 @@ pub fn solve_day_09_part_02(input: &str) -> u32 {
         .collect();
 
     // Coordinate compression: use only vertex coordinates
-    use std::collections::{BTreeSet, HashMap, HashSet};
+    let x_coords: BTreeSet<u32> = vertices.iter().map(|&(x, _)| x).collect();
+    let y_coords: BTreeSet<u32> = vertices.iter().map(|&(_, y)| y).collect();
 
-    let x_coords: BTreeSet<i32> = vertices.iter().map(|&(x, _)| x).collect();
-    let y_coords: BTreeSet<i32> = vertices.iter().map(|&(_, y)| y).collect();
+    let x_list: Vec<u32> = x_coords.into_iter().collect();
+    let y_list: Vec<u32> = y_coords.into_iter().collect();
 
-    let x_list: Vec<i32> = x_coords.into_iter().collect();
-    let y_list: Vec<i32> = y_coords.into_iter().collect();
+    let x_to_idx: HashMap<u32, usize> = x_list.iter().enumerate().map(|(i, &x)| (x, i)).collect();
+    let y_to_idx: HashMap<u32, usize> = y_list.iter().enumerate().map(|(i, &y)| (y, i)).collect();
 
-    let x_to_idx: HashMap<i32, usize> = x_list.iter().enumerate().map(|(i, &x)| (x, i)).collect();
-    let y_to_idx: HashMap<i32, usize> = y_list.iter().enumerate().map(|(i, &y)| (y, i)).collect();
-
-    // Mark all tiles that are on edges or interior
+    // Mark all tiles that are on edges or interior (store as compressed indices)
     let mut tiles: HashSet<(usize, usize)> = HashSet::new();
 
-    for yi in 0..y_list.len() {
-        for xi in 0..x_list.len() {
-            let x = x_list[xi];
-            let y = y_list[yi];
-
+    for (yi, &y) in y_list.iter().enumerate() {
+        for (xi, &x) in x_list.iter().enumerate() {
             // Check if on boundary or inside
             if is_on_edge(&vertices, x, y) || is_inside(&vertices, x, y) {
                 tiles.insert((xi, yi));
@@ -56,7 +53,7 @@ pub fn solve_day_09_part_02(input: &str) -> u32 {
     };
 
     // Find largest rectangle with vertices as opposite corners
-    let mut max_area = 0i64;
+    let mut max_area = 0u32;
 
     for i in 0..vertices.len() {
         for j in i + 1..vertices.len() {
@@ -78,18 +75,18 @@ pub fn solve_day_09_part_02(input: &str) -> u32 {
 
             if is_filled(xi_min, yi_min, xi_max, yi_max) {
                 // Calculate actual area using real coordinates
-                let actual_width = (x_list[xi_max] - x_list[xi_min] + 1) as i64;
-                let actual_height = (y_list[yi_max] - y_list[yi_min] + 1) as i64;
+                let actual_width = x_list[xi_max] - x_list[xi_min] + 1;
+                let actual_height = y_list[yi_max] - y_list[yi_min] + 1;
                 let area = actual_width * actual_height;
                 max_area = max_area.max(area);
             }
         }
     }
 
-    max_area as u32
+    max_area
 }
 
-fn is_on_edge(vertices: &[(i32, i32)], x: i32, y: i32) -> bool {
+fn is_on_edge(vertices: &[(u32, u32)], x: u32, y: u32) -> bool {
     for i in 0..vertices.len() {
         let (x1, y1) = vertices[i];
         let (x2, y2) = vertices[(i + 1) % vertices.len()];
@@ -110,13 +107,20 @@ fn is_on_edge(vertices: &[(i32, i32)], x: i32, y: i32) -> bool {
     false
 }
 
-fn is_inside(vertices: &[(i32, i32)], x: i32, y: i32) -> bool {
+fn is_inside(vertices: &[(u32, u32)], x: u32, y: u32) -> bool {
     let mut inside = false;
     let n = vertices.len();
+    let x = x as i32;
+    let y = y as i32;
 
     for i in 0..n {
         let (x1, y1) = vertices[i];
         let (x2, y2) = vertices[(i + 1) % n];
+
+        let x1 = x1 as i32;
+        let x2 = x2 as i32;
+        let y1 = y1 as i32;
+        let y2 = y2 as i32;
 
         if ((y1 > y) != (y2 > y)) && (x < (x2 - x1) * (y - y1) / (y2 - y1) + x1) {
             inside = !inside;
