@@ -22,8 +22,8 @@ impl Machine {
         }
     }
 
-    // find the lowest amount of button_presses needed to flip machine on
-    // initially all indicator lights are off, in order to be on, the lights have to match self.indicator_lights
+    /// find the lowest amount of button_presses needed to flip machine on
+    /// initially all indicator lights are off, in order to be on, the lights have to match self.indicator_lights
     fn turn_on(&self) -> u32 {
         for num_presses in 0..=self.button_groups.len() {
             let combinations = (0..self.button_groups.len()).combinations(num_presses);

@@ -8,3 +8,4 @@ indoc = "2.0.7"
 itertools = "0.14.0"
 memoize = "0.4.2"
 rayon = "1.10.0"
+z3 = { version = "0.19", features = ["static-link-z3"] }
