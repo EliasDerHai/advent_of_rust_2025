@@ -19,7 +19,7 @@ pub fn solve_day_11_part_01(input: &str) -> u32 {
     count
 }
 
-fn parse(input: &str) -> HashMap<String, Vec<String>> {
+pub fn parse(input: &str) -> HashMap<String, Vec<String>> {
     input
         .trim()
         .lines()
